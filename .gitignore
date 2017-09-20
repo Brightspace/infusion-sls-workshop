@@ -1,0 +1,13 @@
+.vs/
+obj/
+bin/
+typings/
+node_modules/
+coverage/
+.serverless/
+*.log*
+git.json
+.env
+*.TMP
+*.htm
+.idea/

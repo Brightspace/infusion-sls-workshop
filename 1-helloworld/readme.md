@@ -99,11 +99,7 @@ The `package.json` file should look like this afterwards:
 Create a Serverless template:
 
 ```
-# npm run sls -- create -t aws-nodejs
-```
-
-```
-# npm run sls -- create -t aws-nodejs
+# npm run sls -- create -t aws-nodejs --name user-management-service
 
 > user-management-service@1.0.0 sls C:\workspace\infusion-sls-workshop\1-intro\a-template
 > sls "create" "-t" "aws-nodejs"
@@ -118,19 +114,6 @@ Serverless: Generating boilerplate...
  -------'
 
 Serverless: Successfully generated boilerplate for template: "aws-nodejs"
-Serverless: NOTE: Please update the "service" property in serverless.yml with your service name
-```
-
-Look for
-
-```yaml
-service: aws-nodejs # NOTE: update this with your service name
-```
-
-at the top, and replace with
-
-```yaml
-service: user-management-service
 ```
 
 Deploy the "Hello World" Lambda function...:

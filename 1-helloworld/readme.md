@@ -159,8 +159,5 @@ and invoke it!
 > user-management-service@1.0.0 sls C:\workspace\infusion-sls-workshop\1-intro\a-template
 > sls "invoke" "--stage" "<stage>" "--function" "hello"
 
-{
-    "statusCode": 200,
-    "body": "{\"message\":\"Go Serverless v1.0! Your function executed successfully!\",\"input\":{}}"
-}
+"Hello world!"
 ```

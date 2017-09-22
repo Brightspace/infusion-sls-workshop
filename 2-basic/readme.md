@@ -20,7 +20,7 @@ npm run sls -- invoke --stage <stage> --function hello --data "{\"name\":\"d2lsu
 # {"errorMessage": "Please provide a user and a user ID."}
 
 # Invoke your function with an event (sufficient data)
-npm run sls -- invoke --stage <stage> --function hello --data "{\"name\":\"d2lsupport\", \"id\": 169}"
+npm run sls -- invoke --stage <stage> --function hello --data "{\"name\":\"d2lsupport\", \"id\": \"169\"}"
 # This one will succeed with output:
 # "Hello d2lsupport (169)! Number of successful calls: 1"
 ```

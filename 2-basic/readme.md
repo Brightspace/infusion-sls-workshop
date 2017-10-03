@@ -8,6 +8,10 @@ cd 2-basic
 
 ## Examples
 
+The example uses the command line interface to invoke our function. It is also
+possible to [invoke the Lambda function in the AWS
+console](http://docs.aws.amazon.com/lambda/latest/dg/get-started-invoke-manually.html).
+
 ```sh
 # Updates the "Hello World" Lambda function
 npm run sls -- deploy --stage <stage>

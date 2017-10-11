@@ -1,0 +1,42 @@
+service: user-management-service
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DeleteItem
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: arn:aws:dynamodb:*:*:table/${self:custom.table}
+  environment:
+    TABLE: ${self:custom.table}
+
+custom:
+  table: 'users'
+
+functions:
+  addUser:
+    handler: addUser.handler
+  deleteUser:
+    handler: deleteUser.handler
+  getUser:
+    handler: getUser.handler
+
+resources:
+  Resources:
+    table:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: ${self:custom.table}
+        AttributeDefinitions:
+          - AttributeName: Id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+

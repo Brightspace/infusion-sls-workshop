@@ -23,7 +23,7 @@ file for the name of the table, since we will refer to it in multiple places.
 
 ```
 custom:
-  table: 'users'
+  table: users-${opt:stage}
 ```
 
 Variables in the `custom` section can be referred to with the syntax
@@ -84,6 +84,7 @@ npm run sls -- deploy --stage <stage>
 
 # Add a user
 npm run sls -- invoke --stage <stage> --function addUser --data "{\"name\":\"d2lsupport\", \"id\": \"169\"}"
+# View the table in the DynamoDB console to see the added user
 
 # Get the user
 npm run sls -- invoke --stage <stage> --function getUser --data "{\"id\": \"169\"}"
@@ -95,6 +96,7 @@ npm run sls -- invoke --stage <stage> --function getUser --data "{\"id\": \"169\
 
 # Delete the user
 npm run sls -- invoke --stage <stage> --function deleteUser --data "{\"id\": \"169\"}"
+# View the table in the DynamoDB console to see that the user is removed
 
 # Get deleted user
 npm run sls -- invoke --stage <stage> --function getUser --data "{\"id\": \"169\"}"

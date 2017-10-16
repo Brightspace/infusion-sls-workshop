@@ -15,7 +15,7 @@ module.exports.handler = (event, context, callback) => {
       TableName: process.env.TABLE
     };
     dynamodb.deleteItem(params).promise()
-      .then(data => callback(null, data))
+      .then(() => callback(null, 'Success!'))
       .catch(err => callback(err));
   } else {
     callback('Please provide a user ID.');

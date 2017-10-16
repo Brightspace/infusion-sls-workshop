@@ -17,7 +17,7 @@ module.exports.handler = (event, context, callback) => {
       TableName: process.env.TABLE
     };
     dynamodb.putItem(params).promise()
-      .then(data => callback(null, data))
+      .then(() => callback(null, 'Success!'))
       .catch(err => callback(err));
   } else {
     callback('Please provide a user and a user ID.');

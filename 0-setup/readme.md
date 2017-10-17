@@ -56,6 +56,13 @@ npm run sls -- config credentials --provider aws --key <access_key> --secret <se
 `<access_key>` and `<secret_key>` are values that will be provided to you before
 the workshop.
 
+## HTTP Client
+
+Part of the workshop requires making HTTP requests to the Serverless Framework
+application, and you will need more than a web browser to make these (PUT,
+DELETE) requests. Please bring along your favourite HTTP client - we recommend
+[Postman](https://www.getpostman.com/apps).
+
 ## Validation
 
 Run the following:

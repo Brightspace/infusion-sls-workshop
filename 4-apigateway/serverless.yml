@@ -14,7 +14,7 @@ provider:
     TABLE: ${self:custom.table}
 
 custom:
-  table: 'users'
+  table: users-${opt:stage}
 
 functions:
   addUser:

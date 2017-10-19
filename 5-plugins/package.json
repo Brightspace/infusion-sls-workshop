@@ -1,0 +1,17 @@
+{
+  "name": "user-management-service",
+  "version": "1.0.0",
+  "description": "A simple user management service",
+  "main": "handler.js",
+  "scripts": {
+    "sls": "sls",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "request": "^2.83.0",
+    "request-promise-native": "^1.0.5",
+    "serverless": "1.22.0"
+  }
+}

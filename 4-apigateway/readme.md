@@ -159,7 +159,7 @@ module.exports = (statusCode, responseMessage = {}) => ({
 });
 ```
 
-which simplifies formating the output.
+which simplifies formatting the output.
 
 To use it, we add the following to [addUser](./addUser.js),
 [deleteUser](./deleteUser.js), and [getUser](./getUser.js):

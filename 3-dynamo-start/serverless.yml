@@ -1,0 +1,13 @@
+service: user-management-service
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+
+functions:
+  addUser:
+    handler: addUser.handler
+  deleteUser:
+    handler: deleteUser.handler
+  getUser:
+    handler: getUser.handler

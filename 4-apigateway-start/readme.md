@@ -1,93 +1,56 @@
 ## Getting Started
 
-This is an example of what the user management service could look like after
-hooking it up to API Gateway.
-
-Please note that this code sample is **not** production ready.
-
-## Walkthrough
-
-In this stage we will attach our user management service to API gateway to
-create a RESTful API for managing our users. We will be building upon
-`3-dynamo`.
-
-Before we start, let's ensure there is at least one user in the system by
-running the following:
+Navigate to the working directory.
 
 ```sh
-npm run sls -- invoke --stage <stage> --function addUser --data "{\"name\":\"d2lsupport\", \"id\": \"169\"}"
+cd 4-apigateway-start
 ```
 
-### `events` Property
+This code skeleton is very similar to `3-dynamo`, except with additions that
+define the API contract with API Gateway. You can view these additions in
+[serverless.yml](serverless.yml). All three of our Lambda functions will now be
+triggered by API Gateway.
 
-To let Serverless know it should also set up HTTP listeners, add the following
-to the `addUser` function in `serverless.yml`:
+The `event` object will have a different format, and you will need to make code
+changes to retrieve the `id` and `name` values you need in each function.
 
-```yaml
-    events:
-      - http:
-          path: users/{id}
-          method: put
+The changes to use API Gateway also means the response message value for
+`callback()` is passed directly to API Gateway now, so the object will have to
+conform to a certain format for API Gateway to understand it.
+
+The following sections will help you retrieve the values you need and format
+your responses properly.
+
+### API Contract
+
+The API contract determines where the `id` and `name` values will come from. For
+this contract, the `id` value is found in the path, and the `name` value is
+found in the body.
+
+#### Add User
+
 ```
-
-Do the same for `getUser` and `deleteUser`, except replace `put` with `get` and
-`delete` respectively.
-
-After making these changes, update the service:
-
-```sh
-npm run sls -- deploy --stage <stage>
-```
-
-Upon a successful deployment, Serverless should output something like:
-
-```
-Service Information
-service: user-management-service
-stage: mtse
-region: us-east-1
-api keys:
-  None
-endpoints:
-  PUT - https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/{id}
-  DELETE - https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/{id}
-  GET - https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/{id}
-functions:
-  addUser: user-management-service-mtse-addUser
-  deleteUser: user-management-service-mtse-deleteUser
-  getUser: user-management-service-mtse-getUser
-```
-
-This change configures AWS API Gateway to listen to the endpoints above, and
-invoke our Lambda function accordingly. Your stage and domain will be different
-from the above sample output. Please adjust accordingly throughout the
-walkthrough.
-
-Side note: we will only be using the `http` event type, which connects Lambda
-functions to an API gateway. The [Serverless Framework
-documentation](https://serverless.com/framework/docs/providers/aws/events/)
-describes other event types that allow you to hook seemlessly into other AWS
-services.
-
-You can now make HTTP calls to
-https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/{id} (your
-stage and domain will be different)! But what is `{id}`? `{id}` is a path
-parameter that should be replaced with the ID of the user of interest. In our
-case, we created a user with ID `169` before starting, so let's try retrieving
-it now by calling `GET` on
-`https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169`.
-
-```js
+PUT https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169
 {
-    "message": "Internal server error"
+  "name": "d2lsupport"
 }
 ```
 
-Oops. Looks like there's still a bit of work to do.
+#### Get User
 
-### Changes to the `event` Object
+```
+GET https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169
+```
 
-Because API Gateway has taking over the invocation of the Lambda function, the
+#### Delete User
+
+```
+DELETE https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169
+```
+
+### The `event` Object
+
+Because API Gateway has taken over the invocation of the Lambda function, the
 `event` object structure conforms to a [certain
 format](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html#api-gateway-simple-proxy-for-lambda-input-format),
 and has changed significantly:
@@ -109,23 +72,16 @@ and has changed significantly:
 
 (See [Appendix](#appendix) for details).
 
-API Gateway takes all path parameters (e.g. `{id}`) and provides them as
-properties inside `event.pathParameters`. This means we need extract `id` by
-accessing `event.pathParameters.id` for [addUser](addUser.js),
-[deleteUser](./deleteUser.js), and [getUser](./getUser.js).
+API Gateway takes all path parameters (e.g. `{id}`) of the HTTP request and
+provides them as properties inside `event.pathParameters`.
 
-For [addUser](./addUser.js), we also need to provide the name of the user. We
-will do that by including the name in the body of the PUT request (`{"name":
-"d2lsupport"}`). API Gateway provides the body of the PUT request as a JSON
-string, which we deserialize by calling `JSON.parse()`:
+API Gateway also takes the body of the HTTP request and provides it as a string
+inside the `event.body` parameter. We can retreive `name` by deserializing the
+JSON body (`JSON.parse(event.body)`). This is important for
+[addUser](addUser.js), as `name` is provided in the body.
 
-```js
-  const body = JSON.parse(event.body || '{}');
-  const name = body.name;
-```
-
-With these two changes, we are now able to get the `id` and `name` from the HTTP
-request.
+We should be able to retrieve what we need (`id` and `name`) using the
+`event.pathParameters` and `event.body` properties.
 
 ### Changes to the Callback Response Message
 
@@ -159,41 +115,15 @@ module.exports = (statusCode, responseMessage = {}) => ({
 
 which simplifies formatting the output.
 
-To use it, we add the following to [addUser](./addUser.js),
-[deleteUser](./deleteUser.js), and [getUser](./getUser.js):
-
-```js
-const createHttpResponse = require('./createHttpResponse');
-```
-
-For all three Lambda functions, we replace `responseMessage` (the second
-parameter) with the output of `createHttpResponse()`.
+Change the `callback()` response message to adhere to the propery format using
+[createHttpResponse.js](./createHttpResponse.js).
 
 ### Verifying the Changes
 
-Compare your functions with the functions in this sample to see if they look
-similar. If done properly, the service can now be used via HTTP calls!
-
 #### Add User
 
-```
-PUT https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169
-{
-  "name": "d2lsupport"
-}
-```
-
-#### Get User
-
-```
-GET https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169
-```
-
-#### Delete User
-
-```
-DELETE https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169
-```
+You should now be able to create / retrieve / delete users using PUT / GET /
+DELETE HTTP requests.
 
 ## Appendix
 

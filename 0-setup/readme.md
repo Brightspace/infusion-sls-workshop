@@ -34,6 +34,11 @@ between the two versions.
 
 ## Credentials Setup
 
+**If you are already set up for AWS access, these steps may overwrite your
+existing credentials file. Consider making a backup of your [credentials
+file](http://docs.aws.amazon.com/cli/latest/userguide/cli-config-files.html)
+first.**
+
 You are free to use your own AWS account, but note that we might not have time
 to troubleshoot any issues due to account configurations.
 

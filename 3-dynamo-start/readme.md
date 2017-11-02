@@ -30,9 +30,9 @@ Variables in the `custom` section can be referred to with the syntax
 `${self:custom.VARIABLE_NAME}`.
 
 ### Resources
-The `resources` section of `serverless.yml` defines AWS CloudFormation
-resources that will be created when we deploy our project. We can create the
-DynamoDB table using the CloudFormation described
+The `resources` section of `serverless.yml` defines AWS CloudFormation resources
+that will be created when we deploy our project. We can create the DynamoDB
+table using the CloudFormation described
 [here](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html),
 and using the custom `table` variable for the `TableName` property.
 
@@ -49,8 +49,8 @@ resources:
 ### Environment Variables
 To refer to the DynamoDB table in the handler functions, we can pass in the
 table name as an environment variable. Environment variables can be defined in
-the `provider.environment` section of `serverless.yml` where they are passed
-to all lambda functions, or they can be defined for an individual function.
+the `provider.environment` section of `serverless.yml` where they are passed to
+all lambda functions, or they can be defined for an individual function.
 
 ```
 provider:
@@ -61,9 +61,9 @@ provider:
 ### Permissions
 Finally, we need to give the lambda functions permission to interact with the
 DynamoDB table by defining IAM policy statements in the
-`provider.iamRoleStatements` section of `serverless.yml`.
-`${self:custom.table}` is used as the `Resource` so that the permissions only
-apply to the DynamoDB table we created.
+`provider.iamRoleStatements` section of `serverless.yml`. `${self:custom.table}`
+is used as the `Resource` so that the permissions only apply to the DynamoDB
+table we created.
 
 ```
 provider:
@@ -75,6 +75,18 @@ provider:
         - dynamodb:PutItem
       Resource: arn:aws:dynamodb:*:*:table/${self:custom.table}
 ```
+
+## Next Steps
+
+Add the proper DynamoDB API calls to `addUser.js`, `deleteUser.js`, and
+`getUser.js`. Consider using the following functions:
+
+* [putItem()](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#putItem-property)
+* [deleteItem()](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#deleteItem-property)
+* [getItem()](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#getItem-property)
+
+Once you're done, try running some of the examples below! If you get stuck,
+check out the sample solution in `3-dynamo`.
 
 ## Examples
 

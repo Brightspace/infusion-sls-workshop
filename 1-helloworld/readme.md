@@ -64,9 +64,8 @@ About to write to C:\workspace\infusion-sls-workshop\1-intro\a-template\package.
 Is this ok? (yes) yes
 ```
 
-Add an entry to the `scripts` section to access the tool easily:
-
-The `package.json` file should look like this afterwards:
+Add an entry to the `scripts` section to access the tool easily. The
+`package.json` file should look like this afterwards:
 
 ```json
 {

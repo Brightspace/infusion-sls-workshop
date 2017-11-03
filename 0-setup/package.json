@@ -10,7 +10,6 @@
   "author": "",
   "license": "UNLICENSED",
   "devDependencies": {
-    "aws-sdk": "2.128.0",
-    "serverless": "1.22.0"
+    "aws-sdk": "2.128.0"
   }
 }

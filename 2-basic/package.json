@@ -9,7 +9,5 @@
   },
   "author": "",
   "license": "UNLICENSED",
-  "devDependencies": {
-    "serverless": "1.22.0"
-  }
+  "devDependencies": {}
 }

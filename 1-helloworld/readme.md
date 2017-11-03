@@ -13,9 +13,6 @@ following commands to deploy this Serverless project, where `<stage>` is your
 username:
 
 ```sh
-# Install dependencies
-npm install
-
 # Deploy the "Hello World" Lambda function
 npm run sls -- deploy --stage <stage>
 
@@ -67,15 +64,8 @@ About to write to C:\workspace\infusion-sls-workshop\1-intro\a-template\package.
 Is this ok? (yes) yes
 ```
 
-Install Serverless, and add an entry to the `scripts` section to access the tool
-easily:
-
-```
-# npm install --save-dev serverless
-...
-```
-
-The `package.json` file should look like this afterwards:
+Add an entry to the `scripts` section to access the tool easily. The
+`package.json` file should look like this afterwards:
 
 ```json
 {
@@ -89,9 +79,7 @@ The `package.json` file should look like this afterwards:
   },
   "author": "",
   "license": "UNLICENSED",
-  "devDependencies": {
-    "serverless": "1.22.0"
-  }
+  "devDependencies": {}
 }
 
 ```

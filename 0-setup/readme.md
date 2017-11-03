@@ -32,6 +32,43 @@ set up Node.js 6.10. If you already have Node.js but at a different version, you
 can consider installing [nvm](https://github.com/creationix/nvm) to switch
 between the two versions.
 
+## Serverless Setup
+
+Run the following:
+
+```sh
+npm install --global serverless@1.22.0
+```
+
+To reduce network usage, we built these samples to use the global `serverless`
+dependency. However, for your own projects, it is recommended to add it to your
+`devDependencies` section like so:
+
+```json
+{
+  "name": "infusion-sls-workshop-helper",
+  "version": "1.0.0",
+  "description": "Helper package for setting up for the infusion sls workshop.",
+  "main": "validate.js",
+  "scripts": {
+    "sls": "sls",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "serverless": "1.22.0"
+  }
+}
+```
+
+Note: these samples were developed against version 1.22.0, but you are free to
+experiment with the newest version by running:
+
+```sh
+npm install --global serverless
+```
+
 ## Credentials Setup
 
 **If you are already set up for AWS access, these steps may overwrite your

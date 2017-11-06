@@ -24,7 +24,10 @@ module.exports.handler = (event, context, callback) => {
             'Name': data.Item.Name.S
           };
         }
-        callback(null, data);
+        callback(null, createHttpResponse(
+          null, // TODO: replace with proper response status code
+          null  // TODO: replace with proper response body
+        ));
       })
       .catch(err => callback(err));
   } else {

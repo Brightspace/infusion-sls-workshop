@@ -6,6 +6,8 @@ Navigate to the working directory.
 cd 4-apigateway-start
 ```
 
+## Walkthrough
+
 This code skeleton is very similar to `3-dynamo`, except with additions that
 define the API contract with API Gateway. You can view these additions in
 [serverless.yml](serverless.yml). All three of our Lambda functions will now be

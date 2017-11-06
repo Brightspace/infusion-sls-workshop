@@ -8,13 +8,6 @@ module.exports.handler = (event, context, callback) => {
   const id = event.id;
 
   if (id) {
-    const params = {
-      Key: {
-        'Id': { S: id }
-      },
-      TableName: process.env.TABLE
-    };
-
     // Delete user from DynamoDB
 
   } else {

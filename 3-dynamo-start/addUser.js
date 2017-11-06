@@ -9,6 +9,14 @@ module.exports.handler = (event, context, callback) => {
   const id = event.id;
 
   if (name && id) {
+    const params = {
+      Item: {
+        'Id': { S: id },
+        'Name': { S: name }
+      },
+      TableName: process.env.TABLE
+    };
+
     // Add user to DynamoDB
 
   } else {

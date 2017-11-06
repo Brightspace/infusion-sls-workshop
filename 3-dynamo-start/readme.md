@@ -106,7 +106,8 @@ provider:
 of `serverless.yml` has been updated.
 
 Add the proper DynamoDB API calls to `addUser.js`, `deleteUser.js`, and
-`getUser.js`. Consider using the following functions:
+`getUser.js`. An example of how to format the parameters is in `addUser.js`.
+Consider using the following functions:
 
 * [putItem()](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#putItem-property)
 * [deleteItem()](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#deleteItem-property)

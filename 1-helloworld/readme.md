@@ -20,9 +20,6 @@ npm run sls -- deploy --stage <stage>
 npm run sls -- invoke --stage <stage> --function hello
 ```
 
-Note: `sls invoke` will hang if using Git Bash
-https://github.com/serverless/serverless/issues/3929
-
 ## Do-It-Yourself Walkthrough
 
 This section contains steps to do this from scratch.

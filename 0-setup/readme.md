@@ -7,8 +7,8 @@ that need to be completed before the workshop.
 
 ## Node.js Setup
 
-AWS Lambda currently supports Node.js versions 4.3 and 6.10. We will be using
-the 6.10 version.
+AWS Lambda currently supports Node.js versions 4.3, 6.10, and Node 8.10. We will
+be using the 6.10 version.
 
 ### Windows
 

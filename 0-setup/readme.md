@@ -8,27 +8,27 @@ that need to be completed before the workshop.
 ## Node.js Setup
 
 AWS Lambda currently supports Node.js versions 4.3, 6.10, and 8.10. We will
-be using the 6.10 version.
+be using the 8.10 version.
 
 ### Windows
 
-Download and run the [6.10
-msi](https://nodejs.org/download/release/v6.10.3/node-v6.10.3-x64.msi). If you
+Download and run the [8.10
+msi](https://nodejs.org/download/release/v8.10.0/node-v8.10.0-x64.msi). If you
 already have Node.js, but at a different version, you can consider installing
 [nvm-windows](https://github.com/coreybutler/nvm-windows) to switch between the
 two versions.
 
 ### Mac
 
-Download and run the [6.10
-pkg](https://nodejs.org/download/release/v6.10.3/node-v6.10.3.pkg). If you
+Download and run the [8.10
+pkg](https://nodejs.org/download/release/v8.10.0/node-v8.10.0.pkg). If you
 already have Node.js, but at a different version, you can consider installing
 [nvm](https://github.com/creationix/nvm) to switch between the two versions.
 
 ### Linux
 
 Please contact us if you would like to use a Linux machine and are not able to
-set up Node.js 6.10. If you already have Node.js but at a different version, you
+set up Node.js 8.10. If you already have Node.js but at a different version, you
 can consider installing [nvm](https://github.com/creationix/nvm) to switch
 between the two versions.
 

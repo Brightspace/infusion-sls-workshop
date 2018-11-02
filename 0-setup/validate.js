@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const iam = new AWS.IAM();
 
-iam.getUser()
+iam.listGroups()
   .promise()
   .then(data => {
     console.log('Success!');

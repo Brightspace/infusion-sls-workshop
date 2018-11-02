@@ -1,15 +1,13 @@
 {
   "name": "infusion-sls-workshop-helper",
   "version": "1.0.0",
-  "description": "Helper package for setting up for the infusion sls workshop.",
+  "description": "Verifies AWS credential setup",
   "main": "validate.js",
   "scripts": {
-    "sls": "sls",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "AWS_PROFILE=infusion-workshop node validate.js"
   },
-  "author": "",
   "license": "UNLICENSED",
   "devDependencies": {
-    "aws-sdk": "2.128.0"
+    "aws-sdk": "^2.128.0"
   }
 }

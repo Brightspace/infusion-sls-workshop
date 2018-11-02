@@ -1,5 +1,5 @@
 'use strict';
 
-module.exports.hello = (event, context, callback) => {
-  callback(null, 'Hello world!');
+module.exports.hello = async (event, context) => {
+  return 'Hello world!';
 };

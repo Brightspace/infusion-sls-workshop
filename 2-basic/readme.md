@@ -1,3 +1,5 @@
+# Basic
+
 ## Getting Started
 
 Navigate to the working directory.
@@ -8,13 +10,13 @@ cd 2-basic
 
 ## Examples
 
-The example uses the command line interface to invoke our function. It is also
-possible to [invoke the Lambda function in the AWS
-console](http://docs.aws.amazon.com/lambda/latest/dg/get-started-invoke-manually.html).
+This example uses the command line interface to invoke the function. It is also possible to invoke the Lambda function in the [AWS console](http://docs.aws.amazon.com/lambda/latest/dg/get-started-invoke-manually.html).
+
+## Walkthrough
 
 ```sh
 # Updates the "Hello World" Lambda function
-npm run sls -- deploy --stage <stage>
+npx serverless deploy
 
 # Invoke your function with no event
 npm run sls -- invoke --stage <stage> --function hello

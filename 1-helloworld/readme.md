@@ -1,3 +1,5 @@
+# Helo World
+
 ## Getting Started
 
 Navigate to the working directory.
@@ -9,85 +11,24 @@ cd 1-helloworld
 ## Walkthrough
 
 Everything you need is already available in this directory. Simply run the
-following commands to deploy this Serverless project, where `<stage>` is your
-username:
+following command to deploy this Serverless project:
 
 ```sh
-# Deploy the "Hello World" Lambda function
-npm run sls -- deploy --stage <stage>
+npx serverless deploy
+```
 
-# Invoke your function!
-npm run sls -- invoke --stage <stage> --function hello
+Once this has completed, you can invoke the `hello` function.
+
+```sh
+npx serverless invoke -f hello
 ```
 
 ## Do-It-Yourself Walkthrough
 
-This section contains steps to do this from scratch.
-
-Create a `package.json` file, which contains metadata about the node project.
-```
-# npm init
-This utility will walk you through creating a package.json file.
-It only covers the most common items, and tries to guess sensible defaults.
-
-See `npm help json` for definitive documentation on these fields
-and exactly what they do.
-
-Use `npm install <pkg> --save` afterwards to install a package and
-save it as a dependency in the package.json file.
-
-Press ^C at any time to quit.
-name: (a-template) user-management-service
-version: (1.0.0)
-description: A simple user management service
-entry point: (index.js) handler.js
-test command:
-git repository:
-keywords:
-author:
-license: (ISC) UNLICENSED
-About to write to C:\workspace\infusion-sls-workshop\1-intro\a-template\package.json:
-
-{
-  "name": "user-management-service",
-  "version": "1.0.0",
-  "description": "A simple user management service",
-  "main": "handler.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "UNLICENSED"
-}
-
-
-Is this ok? (yes) yes
-```
-
-Add an entry to the `scripts` section to access the tool easily. The
-`package.json` file should look like this afterwards:
-
-```json
-{
-  "name": "user-management-service",
-  "version": "1.0.0",
-  "description": "A simple user management service",
-  "main": "handler.js",
-  "scripts": {
-    "sls": "sls",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "UNLICENSED",
-  "devDependencies": {}
-}
-
-```
-
 Create a Serverless template:
 
-```
-# npm run sls -- create -t aws-nodejs --name user-management-service
+```sh
+# npx serverless create -t aws-nodejs --name user-management-service
 
 > user-management-service@1.0.0 sls C:\workspace\infusion-sls-workshop\1-intro\a-template
 > sls "create" "-t" "aws-nodejs"

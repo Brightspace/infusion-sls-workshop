@@ -4,8 +4,8 @@ provider:
   name: aws
   runtime: nodejs8.10
   profile: infusion-workshop
-  stage: ${opt:stage, env:USER}
+  stage: ${env:USER}
 
 functions:
-  hello:
-    handler: hello.handler
+  greet:
+    handler: greet.handler

@@ -2,9 +2,10 @@
 
 const aws = require('aws-sdk');
 
+const tableName = process.env.TABLE_NAME;
+
 // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html
 const client =  new aws.DynamoDB.DocumentClient();
-
 /*
 Make sure to request a promise from the client, for example:
 

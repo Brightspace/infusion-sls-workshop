@@ -2,16 +2,17 @@
 
 ## Getting Started
 
-This is an example of what the user management service could look like after
-hooking it up to API Gateway.
+Navigate to the working directory.
 
-Please note that this code sample is **not** production ready.
+```sh
+cd 3-apigateway
+```
 
-## Walkthrough
+In this stage we will attach API Gateway to our user management service.
 
-In this stage we will attach our user management service to API gateway and implement a basic in-memory user repository.
+Please note that this code is **not** production ready.
 
-### `events` Property
+## `events` Property
 
 If you examine `serverless.yml` you will see that there are now three functions:
 
@@ -19,28 +20,21 @@ If you examine `serverless.yml` you will see that there are now three functions:
 - deleteuser
 - getUser
 
-To let Serverless know it should also set up HTTP listeners, add the following
-to the `addUser` function in `serverless.yml`:
+Each function has an `events` object.  A function can be hooked up to more than one event source, but in this case we have just one: `http`.
 
-```yaml
-    events:
-      - http:
-          path: users/{id}
-          method: put
-```
+The `http` event configuration has `path` and `method` properties.
 
-Do the same for `getUser` and `deleteUser`, except replace `put` with `get` and
-`delete` respectively.
+## Deploy
 
-After making these changes, update the service:
+Deploy the updated application:
 
 ```sh
-npm run sls -- deploy --stage <stage>
+serverless deploy
 ```
 
 Upon a successful deployment, Serverless should output something like:
 
-```
+```sh
 Service Information
 service: user-management-service
 stage: mtse
@@ -62,34 +56,10 @@ invoke our Lambda function accordingly. Your stage and domain will be different
 from the above sample output. Please adjust accordingly throughout the
 walkthrough.
 
-Side note: we will only be using the `http` event type, which connects Lambda
-functions to an API gateway. The [Serverless Framework
-documentation](https://serverless.com/framework/docs/providers/aws/events/)
-describes other event types that allow you to hook seemlessly into other AWS
-services.
+## Changes to the `event` Object
 
-You can now make HTTP calls to
-https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/{id} (your
-stage and domain will be different)! But what is `{id}`? `{id}` is a path
-parameter that should be replaced with the ID of the user of interest. In our
-case, we created a user with ID `169` before starting, so let's try retrieving
-it now by calling `GET` on
-`https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169`.
-
-```js
-{
-    "message": "Internal server error"
-}
-```
-
-Oops. Looks like there's still a bit of work to do.
-
-### Changes to the `event` Object
-
-Because API Gateway has taking over the invocation of the Lambda function, the
-`event` object structure conforms to a [certain
-format](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html#api-gateway-simple-proxy-for-lambda-input-format),
-and has changed significantly:
+Because API Gateway is invoking the Lambda function, the `event` object structure conforms to a [certain
+format](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html#api-gateway-simple-proxy-for-lambda-input-format), and has changed significantly:
 
 ```js
 {
@@ -106,10 +76,8 @@ and has changed significantly:
 }
 ```
 
-(See [Appendix](#appendix) for details).
-
 API Gateway takes all path parameters (e.g. `{id}`) and provides them as
-properties inside `event.pathParameters`. This means we need extract `id` by
+properties inside `event.pathParameters`. This means we obtain `id` by
 accessing `event.pathParameters.id` for [addUser](addUser.js),
 [deleteUser](./deleteUser.js), and [getUser](./getUser.js).
 
@@ -123,73 +91,25 @@ string, which we deserialize by calling `JSON.parse()`:
   const name = body.name;
 ```
 
-With these two changes, we are now able to get the `id` and `name` from the HTTP
-request.
+## Invoke
 
-### Changes to the Callback Response Message
+You can now make HTTP calls to
+https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/{id} (your
+stage and domain will be different)! But what is `{id}`? `{id}` is a path
+parameter that should be replaced with the ID of the user of interest.
 
-The `callback()` function, which previously returned the output directly to us,
-now returns the output to API Gateway. API Gateway expects the output to
-[conform to a specific
-format](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html#api-gateway-simple-proxy-for-lambda-output-format):
+Try making a GET request to your API endpoint with a value of `1` for id. You should see a response:
 
 ```js
 {
-    "isBase64Encoded": true|false,
-    "statusCode": httpStatusCode,
-    "headers": { "headerName": "headerValue", ... },
-    "body": "..."
+    "message": "Internal server error"
 }
 ```
 
-Note that only `statusCode` is required.
+Oops. Looks like there's still a bit of work to do.
 
-To avoid code duplication, [createHttpResponse.js](./createHttpResponse.js) was
-created to house the `createHttpResponse()` method:
+If you wait a minute, you can run `sls logs -f getUser` to see more information. You an also browse the source code and see why we're having an Internal Server Error.
 
-```js
-'use strict';
+## Additional Reading
 
-module.exports = (statusCode, responseMessage = {}) => ({
-  statusCode: statusCode,
-  body: JSON.stringify(responseMessage)
-});
-```
-
-which simplifies formatting the output.
-
-To use it, we add the following to [addUser](./addUser.js),
-[deleteUser](./deleteUser.js), and [getUser](./getUser.js):
-
-```js
-const createHttpResponse = require('./createHttpResponse');
-```
-
-For all three Lambda functions, we replace `responseMessage` (the second
-parameter) with the output of `createHttpResponse()`.
-
-### Verifying the Changes
-
-Compare your functions with the functions in this sample to see if they look
-similar. If done properly, the service can now be used via HTTP calls!
-
-#### Add User
-
-```
-PUT https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169
-{
-  "name": "d2lsupport"
-}
-```
-
-#### Get User
-
-```
-GET https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169
-```
-
-#### Delete User
-
-```
-DELETE https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169
-```
+The [Serverless Framework documentation](https://serverless.com/framework/docs/providers/aws/events/) describes other event types that allow you to hook seamlessly into other AWS services.

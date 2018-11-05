@@ -142,3 +142,21 @@ npm run sls -- invoke --stage <stage> --function getUser --data "{\"id\": \"169\
 # Response
 # {}
 ```
+
+// you need to add a resource
+resource:
+  Resources:
+    table:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: ${self:custom.table}
+        AttributeDefinitions:
+          - AttributeName: Id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+

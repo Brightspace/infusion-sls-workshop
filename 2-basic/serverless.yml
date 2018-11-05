@@ -2,8 +2,10 @@ service: user-management-service
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
+  profile: infusion-workshop
+  stage: ${opt:stage, env:USER}
 
 functions:
   hello:
-    handler: handler.hello
+    handler: hello.handler

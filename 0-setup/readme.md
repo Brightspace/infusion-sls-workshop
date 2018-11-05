@@ -8,12 +8,22 @@ AWS Lambda currently supports Node.js versions 4.3, 6.10, and 8.10.
 
 We will be using the 8.10 version. Download and run the appropriate installer for [Windows](https://nodejs.org/download/release/v8.10.0/node-v8.10.0-x64.msi) or [MacOS](https://nodejs.org/download/release/v8.10.0/node-v8.10.0.pkg)
 
+## Serverless
+
+For this workshop, we are going to use a global installation of Serverless to keep things simple.
+
+Run:
+
+```sh
+npm install -g serverless@1.32.0
+```
+
 ## AWS Credentials
 
 Open a command line or terminal window and enter:
 
 ```sh
-npx serverless config credentials -p aws -n infusion-workshop -k <access_key> -s <secret_key>
+serverless config credentials -p aws -n infusion-workshop -k <access_key> -s <secret_key>
 ```
 
 `<access_key>` and `<secret_key>` are values that will be provided to you. This will configure an AWS Profile called `infusion-workshop` that won't interfere with your other AWS credentials.

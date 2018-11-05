@@ -1,3 +1,5 @@
+# API Gateway
+
 ## Getting Started
 
 This is an example of what the user management service could look like after
@@ -7,18 +9,15 @@ Please note that this code sample is **not** production ready.
 
 ## Walkthrough
 
-In this stage we will attach our user management service to API gateway to
-create a RESTful API for managing our users. We will be building upon
-`3-dynamo`.
-
-Before we start, let's ensure there is at least one user in the system by
-running the following:
-
-```sh
-npm run sls -- invoke --stage <stage> --function addUser --data "{\"name\":\"d2lsupport\", \"id\": \"169\"}"
-```
+In this stage we will attach our user management service to API gateway and implement a basic in-memory user repository.
 
 ### `events` Property
+
+If you examine `serverless.yml` you will see that there are now three functions:
+
+- addUser
+- deleteuser
+- getUser
 
 To let Serverless know it should also set up HTTP listeners, add the following
 to the `addUser` function in `serverless.yml`:
@@ -193,183 +192,4 @@ GET https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169
 
 ```
 DELETE https://5eg3sd8dkh.execute-api.us-east-1.amazonaws.com/mtse/users/169
-```
-
-## Appendix
-
-### Authorization
-
-You will likely want to run some authorization logic in front of your service.
-This can be achieved by providing a [custom
-authorizer](https://serverless.com/framework/docs/providers/aws/events/apigateway#http-endpoints-with-custom-authorizers).
-
-### `event` format
-
-The input format is available on
-[docs.aws.amazon.com](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html#api-gateway-simple-proxy-for-lambda-input-format).
-The following are examples of what `event` will look like for our user
-management service.
-
-Sample GET `event`:
-
-```js
-{ resource: '/users/{id}',
-  path: '/users/169',
-  httpMethod: 'GET',
-  headers:
-   { Accept: '*/*',
-     'Accept-Encoding': 'gzip, deflate',
-     'cache-control': 'no-cache',
-     'CloudFront-Forwarded-Proto': 'https',
-     'CloudFront-Is-Desktop-Viewer': 'true',
-     'CloudFront-Is-Mobile-Viewer': 'false',
-     'CloudFront-Is-SmartTV-Viewer': 'false',
-     'CloudFront-Is-Tablet-Viewer': 'false',
-     'CloudFront-Viewer-Country': 'CA',
-     Host: '5eg3sd8dkh.execute-api.us-east-1.amazonaws.com',
-     'Postman-Token': '692e9cfb-2ed8-4dc5-8f90-fa2f9c7646f8',
-     'User-Agent': 'PostmanRuntime/6.4.0',
-     Via: '1.1 1b6b00b86f1f234214316c68f617caa6.cloudfront.net (CloudFront)',
-     'X-Amz-Cf-Id': '4xWo7dPXfszYkZ8CQqzFYA7p1-uxpdMbT4RY2IcL38Pp4Gu-f1SRnw==',
-     'X-Amzn-Trace-Id': 'Root=1-59e11d00-39fcb9bf0a47955c249ce463',
-     'X-Forwarded-For': '216.16.228.6, 54.182.234.52',
-     'X-Forwarded-Port': '443',
-     'X-Forwarded-Proto': 'https' },
-  queryStringParameters: null,
-  pathParameters: { id: '169' },
-  stageVariables: null,
-  requestContext:
-   { path: '/mtse/users/169',
-     accountId: '728041832160',
-     resourceId: 'bfjzr5',
-     stage: 'mtse',
-     requestId: '2367c734-b052-11e7-ba73-19a6f8363655',
-     identity:
-      { cognitoIdentityPoolId: null,
-        accountId: null,
-        cognitoIdentityId: null,
-        caller: null,
-        apiKey: '',
-        sourceIp: '216.16.228.6',
-        accessKey: null,
-        cognitoAuthenticationType: null,
-        cognitoAuthenticationProvider: null,
-        userArn: null,
-        userAgent: 'PostmanRuntime/6.4.0',
-        user: null },
-     resourcePath: '/users/{id}',
-     httpMethod: 'GET',
-     apiId: '5eg3sd8dkh' },
-  body: null,
-  isBase64Encoded: false }
-```
-
-Sample PUT `event`:
-
-```js
-{ resource: '/users/{id}',
-  path: '/users/169',
-  httpMethod: 'PUT',
-  headers:
-   { Accept: '*/*',
-     'Accept-Encoding': 'gzip, deflate',
-     'cache-control': 'no-cache',
-     'CloudFront-Forwarded-Proto': 'https',
-     'CloudFront-Is-Desktop-Viewer': 'true',
-     'CloudFront-Is-Mobile-Viewer': 'false',
-     'CloudFront-Is-SmartTV-Viewer': 'false',
-     'CloudFront-Is-Tablet-Viewer': 'false',
-     'CloudFront-Viewer-Country': 'CA',
-     'Content-Type': 'application/json',
-     Host: '5eg3sd8dkh.execute-api.us-east-1.amazonaws.com',
-     'Postman-Token': 'ff8380ef-e929-49d0-aa06-ba75b865dd3c',
-     'User-Agent': 'PostmanRuntime/6.4.0',
-     Via: '1.1 d4288fffbe3895015af2915a87b1fa4e.cloudfront.net (CloudFront)',
-     'X-Amz-Cf-Id': 'W7srsa5fPMB9j-dbbfKZ-NWbAmYGK4hgZVCnJmGxu_oxeXXQs5nZKw==',
-     'X-Amzn-Trace-Id': 'Root=1-59e12562-0fffeeb8594c0fb23a95db3f',
-     'X-Forwarded-For': '216.16.228.6, 54.182.234.75',
-     'X-Forwarded-Port': '443',
-     'X-Forwarded-Proto': 'https' },
-  queryStringParameters: null,
-  pathParameters: { id: '169' },
-  stageVariables: null,
-  requestContext:
-   { path: '/mtse/users/169',
-     accountId: '728041832160',
-     resourceId: 'bfjzr5',
-     stage: 'mtse',
-     requestId: '2277331f-b057-11e7-80ad-ed0f21aa38ea',
-     identity:
-      { cognitoIdentityPoolId: null,
-        accountId: null,
-        cognitoIdentityId: null,
-        caller: null,
-        apiKey: '',
-        sourceIp: '216.16.228.6',
-        accessKey: null,
-        cognitoAuthenticationType: null,
-        cognitoAuthenticationProvider: null,
-        userArn: null,
-        userAgent: 'PostmanRuntime/6.4.0',
-        user: null },
-     resourcePath: '/users/{id}',
-     httpMethod: 'PUT',
-     apiId: '5eg3sd8dkh' },
-  body: '{\n\t"name": "mtse"\n}',
-  isBase64Encoded: false }
-```
-
-Sample DELETE `event`:
-
-```js
-{ resource: '/users/{id}',
-  path: '/users/171',
-  httpMethod: 'DELETE',
-  headers:
-   { Accept: '*/*',
-     'Accept-Encoding': 'gzip, deflate',
-     'cache-control': 'no-cache',
-     'CloudFront-Forwarded-Proto': 'https',
-     'CloudFront-Is-Desktop-Viewer': 'true',
-     'CloudFront-Is-Mobile-Viewer': 'false',
-     'CloudFront-Is-SmartTV-Viewer': 'false',
-     'CloudFront-Is-Tablet-Viewer': 'false',
-     'CloudFront-Viewer-Country': 'CA',
-     'Content-Type': 'application/json',
-     Host: '5eg3sd8dkh.execute-api.us-east-1.amazonaws.com',
-     'Postman-Token': '56b6d040-fc9f-41bd-9c69-1d02dc8c4bb3',
-     'User-Agent': 'PostmanRuntime/6.4.0',
-     Via: '1.1 cae81d5ff1d682b28f2deabdd94777d4.cloudfront.net (CloudFront)',
-     'X-Amz-Cf-Id': 'IRzKP8dvkwG_U0jLeTJSXg3i0Tg-9G7jEQbU-b5Wo_RqMTe8h_jpzg==',
-     'X-Amzn-Trace-Id': 'Root=1-59e12ab7-5dfc94071c6b052731296661',
-     'X-Forwarded-For': '216.16.228.6, 54.182.234.70',
-     'X-Forwarded-Port': '443',
-     'X-Forwarded-Proto': 'https' },
-  queryStringParameters: null,
-  pathParameters: { id: '171' },
-  stageVariables: null,
-  requestContext:
-   { path: '/mtse/users/171',
-     accountId: '728041832160',
-     resourceId: 'bfjzr5',
-     stage: 'mtse',
-     requestId: '4ff76cf4-b05a-11e7-a8a6-cdfa785d819f',
-     identity:
-      { cognitoIdentityPoolId: null,
-        accountId: null,
-        cognitoIdentityId: null,
-        caller: null,
-        apiKey: '',
-        sourceIp: '216.16.228.6',
-        accessKey: null,
-        cognitoAuthenticationType: null,
-        cognitoAuthenticationProvider: null,
-        userArn: null,
-        userAgent: 'PostmanRuntime/6.4.0',
-        user: null },
-     resourcePath: '/users/{id}',
-     httpMethod: 'DELETE',
-     apiId: '5eg3sd8dkh' },
-  body: null,
-  isBase64Encoded: false }
 ```

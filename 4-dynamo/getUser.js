@@ -1,32 +1,24 @@
 'use strict';
 
-const aws = require('aws-sdk');
+const repository = require('./repository');
 
-module.exports.handler = (event, context, callback) => {
-  const dynamodb = new aws.DynamoDB();
+exports.handler = async (event) => {
+  const id = event.pathParameters.id;
 
-  const id = event.id;
+  const user = await repository.find(id);
 
-  if (id) {
-    const params = {
-      Key: {
-        'Id': { S: id }
+  if (user) {
+    return {
+      statusCode: 200,
+      headers: {
+        'content-type': 'application/json',
       },
-      TableName: process.env.TABLE
+      body: JSON.stringify(user, null, 2)
     };
-    dynamodb.getItem(params).promise()
-      .then(data => {
-        if (data.Item) {
-          // Format the output
-          data = {
-            'Id': data.Item.Id.S,
-            'Name': data.Item.Name.S
-          };
-        }
-        callback(null, data);
-      })
-      .catch(err => callback(err));
-  } else {
-    callback('Please provide a user ID.');
   }
+
+  return {
+    statusCode: 404,
+    body: `User ${id} not found`
+  };
 };

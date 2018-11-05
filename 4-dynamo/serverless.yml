@@ -2,32 +2,50 @@ service: user-management-service
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
+  profile: infusion-workshop
+  stage: ${env:USER}
   iamRoleStatements:
     - Effect: Allow
       Action:
         - dynamodb:DeleteItem
         - dynamodb:GetItem
         - dynamodb:PutItem
-      Resource: arn:aws:dynamodb:*:*:table/${self:custom.table}
+      Resource:
+        Fn::GetAtt:
+          - Table
+          - Arn
   environment:
-    TABLE: ${self:custom.table}
-
-custom:
-  table: users-${opt:stage}
+    TABLE_NAME:
+      Ref: Table
 
 functions:
   addUser:
     handler: addUser.handler
+    events:
+      - http:
+          path: users/{id}
+          method: put
   deleteUser:
     handler: deleteUser.handler
+    events:
+      - http:
+          path: users/{id}
+          method: delete
   getUser:
     handler: getUser.handler
+    events:
+      - http:
+          path: users/{id}
+          method: get
+
+custom:
+  table: ${self:provider.stage}-users
 
 resources:
   Resources:
-    table:
-      Type: "AWS::DynamoDB::Table"
+    Table:
+      Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.table}
         AttributeDefinitions:

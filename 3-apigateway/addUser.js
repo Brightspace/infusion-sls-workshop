@@ -1,31 +1,25 @@
 'use strict';
 
-const aws = require('aws-sdk');
-const createHttpResponse = require('./createHttpResponse');
+const repository = require('./repository');
 
-module.exports.handler = (event, context, callback) => {
-  const dynamodb = new aws.DynamoDB();
+exports.handler = async (event) => {
+  const id = event.pathParameters.id;
   const body = JSON.parse(event.body || '{}');
 
-  const id = event.pathParameters.id;
-  const name = body.name;
+  const { name } = body;
 
-  if (!name) {
-    const response = createHttpResponse(400, {
-      error: 'Request body must include "name".'
-    });
-    callback(null, response);
+  if (name) {
+    await repository.save(id, { name });
+
+    return {
+      statusCode: 200,
+      body: 'Saved!'
+    };
   }
 
-  const params = {
-    Item: {
-      'Id': { S: id },
-      'Name': { S: name }
-    },
-    TableName: process.env.TABLE
+  return {
+    statusCode: 400,
+    body: 'Request body must include "name"'
   };
 
-  dynamodb.putItem(params).promise()
-    .then(() => callback(null, createHttpResponse(200)))
-    .catch(err => callback(err));
 };

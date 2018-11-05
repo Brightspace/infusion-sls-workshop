@@ -1,3 +1,5 @@
+# Plugins
+
 ## Getting Started
 
 Navigate to the working directory.

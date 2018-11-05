@@ -1,23 +1,14 @@
 'use strict';
 
-const aws = require('aws-sdk');
+const repository = require('./repository');
 
-module.exports.handler = (event, context, callback) => {
-  const dynamodb = new aws.DynamoDB();
+exports.handler = async (event) => {
+  const id = event.pathParameters.id;
 
-  const id = event.id;
+  await repository.remove(id);
 
-  if (id) {
-    const params = {
-      Key: {
-        'Id': { S: id }
-      },
-      TableName: process.env.TABLE
-    };
-    dynamodb.deleteItem(params).promise()
-      .then(() => callback(null, 'Success!'))
-      .catch(err => callback(err));
-  } else {
-    callback('Please provide a user ID.');
-  }
+  return {
+    statusCode: 200,
+    body: 'Deleted user'
+  };
 };

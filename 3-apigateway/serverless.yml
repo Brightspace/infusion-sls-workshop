@@ -2,19 +2,9 @@ service: user-management-service
 
 provider:
   name: aws
-  runtime: nodejs6.10
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:DeleteItem
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-      Resource: arn:aws:dynamodb:*:*:table/${self:custom.table}
-  environment:
-    TABLE: ${self:custom.table}
-
-custom:
-  table: users-${opt:stage}
+  runtime: nodejs8.10
+  profile: infusion-workshop
+  stage: ${env:USER}
 
 functions:
   addUser:
@@ -35,20 +25,3 @@ functions:
       - http:
           path: users/{id}
           method: get
-
-resources:
-  Resources:
-    table:
-      Type: "AWS::DynamoDB::Table"
-      Properties:
-        TableName: ${self:custom.table}
-        AttributeDefinitions:
-          - AttributeName: Id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: Id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-

@@ -37,7 +37,7 @@ You need to pass data to the function or it will continue to throw an Error. The
 Try the following command:
 
 ```sh
-serverless invoke -f greet -d '{"name":"d2lsupport"}'
+serverless invoke -f greet -d "{\"name\":\"d2lsupport\"}"
 ```
 
 This will return `"Hello d2lsupport! numSuccessfulCalls: 1"`

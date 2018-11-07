@@ -8,4 +8,4 @@ provider:
 
 functions:
   hello:
-    handler: hello.handler
+    handler: index.handler

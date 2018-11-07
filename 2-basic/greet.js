@@ -11,12 +11,12 @@ let numSuccessfulCalls = 0;
 exports.handler = async (event) => {
   console.log('Event:', JSON.stringify(event));
 
-  const { name, id } = event;
+  const { name } = event;
 
-  if (name && id) {
+  if (name) {
     numSuccessfulCalls++;
-    return `Hello ${name} (${id})! Number of successful calls: ${numSuccessfulCalls}`;
+    return `Hello ${name}! numSuccessfulCalls: ${numSuccessfulCalls}`;
   }
 
-  throw new Error('Please provide a user and a user ID.');
+  throw new Error('Please provide a name.');
 };

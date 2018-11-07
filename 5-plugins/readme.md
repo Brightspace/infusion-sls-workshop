@@ -8,118 +8,63 @@ Navigate to the working directory.
 cd 5-plugins
 ```
 
-Please note that this code sample is **not** production ready.
+In this stage we will install some plugins that help with various aspects of deployment and configuration.
 
-## Walkthrough
+Plugins are published as regular Node.js libraries to `npm`, and usually - but not always - prefixed with `serverless-plugin-` to aid in discoverability.
 
-In this stage we will add a healthcheck lambda and use a custom serverless
-plugin to add a `health` CLI command to check the health of our service.
+## Install serverless-plugin-aws-alerts
 
-### Healthcheck lambda
+This plugin injects additional CloudFormation Resources to help with monitoring and alerting.
 
-First, add `healthcheck.js` and update `serverless.yml` to add the new
-function:
-
-```yaml
-functions:
-  healthcheck:
-    handler: healthcheck.handler
-    events:
-      - http:
-          path: healthcheck
-          method: get
-```
-
-The healthcheck function responds to GET requests to the `/healthcheck`
-endpoint with a `200 OK` response. Update the service to test the endpoint.
+Install it using the following command:
 
 ```sh
-npm run sls -- deploy --stage <stage>
-
-...
-Serverless: Stack update finished...
-Service Information
-...
-endpoints:
-  GET - https://<id>.execute-api.us-east-1.amazonaws.com/<stage>/healthcheck
+serverless plugin install -n serverless-plugin-aws-alerts
 ```
 
-### Custom Plugin
+This changed a few things. First, it generated a `package.json` file to reference the node module and asked `npm` to install it. Then it added this to `serverless.yml`:
 
-First, the plugin requires two modules, so add them as `dev-dependencies` to
-`package.json`:
-
-```
-npm i --save-dev request
-npm i --save-dev request-promise-native
-```
-
-#### How the plugin works
-
-The plugin uses the serverless stack name to make a request to CloudFormation
-for the 'ServiceEndpoint' (HTTP endpoint of the API Gateway).
-
-```
-const stackName = this.provider.naming.getStackName();
-const outputName = 'ServiceEndpoint';
-
-return this.provider.request('CloudFormation', 'describeStacks', { StackName: stackName }, this.stage, this.region)
-...
-```
-
-Once it has the endpoint, it makes a request to the `/healthcheck` route and
-looks for the `'OK'` response.
-
-#### Hooking up the plugin
-
-Add a `plugins` section to `serverless.yml` with the name of the
-healthcheck plugin:
-
-```yaml
+```yml
 plugins:
-  - serverless-gateway-health-check
+  - serverless-plugin-aws-alerts
+ ```
+
+Just because a plugin is installed, does not mean it will load - it has to be in listed in `serverless.yml`.
+
+If you examine `serverless.yml` you will see:
+
+```yml
+custom:
+  alerts:
+    alarms:
+      - functionThrottles
+      - functionErrors
 ```
 
-Serverless looks for local plugins in the `.serverless_plugins` directory
-(`<plugin-name>.js` or `<plugin-name>/index.js`). Create this directory and
-add the file `serverless-gateway-health-check.js`.
+The custom section is where all kinds of configuration properties may be written. Plugins usually read this section in order to determine how to behave. In this case, the alerts plugin looks for it's configuration in a second level `alerts` block, and it sees that we want two `alarms` created - one for throttles and one for errors _for each function_.
 
-The plugin code defines a custom `health` CLI command (like `deploy`), with a
-custom lifecycle event called `check`.
+## Package
 
-```yaml
-this.commands = {
-  health: {
-    lifecycleEvents: [
-      'check'
-    ]
-  },
-};
-```
-
-A hook is defined that triggers the execution of the `this.healthcheck()`
-function whenever the `health:check` event occurs (running `sls health`).
-
-```yaml
-this.hooks = {
-  'health:check': this.healthcheck.bind(this)
-};
-```
-
-After making these changes, update the service:
+The plugin you just installed hooks in to the `package` lifecycle. You have previously used the `serverless deploy` command, which actaully triggers the `package` lifecycle first, as a prerequisite, but you can also run package directly:
 
 ```sh
-npm run sls -- deploy --stage <stage>
+serverless package
 ```
 
-Invoke the healthcheck by running:
+This essentialy does everything _except_ deploy the application. To see what resources were added, you can view `./.serverless/cloudformation-template-update.json`. You should see a few resources with `"Type": "AWS::CloudWatch::Alarm"` - those were created by the plugin, so you don't have to!
+
+## Install serverless-prune-plugin
+
+This plugin adds a new command, `prune` which will remove old version of your Lambda function from the cloud.
+
+Install it just like you did the alerts plugin:
 
 ```sh
-npm run sls -- health --stage <stage>
+serverless plugin install -n serverless-prune-plugin
+```
 
-#Response
-> user-management-service@1.0.0 health .../infusion-sls-workshop/5-plugins
-> sls health "--stage" "<stage>"
+This plugin adds a new command, `prune`. Try pruning everything except the most recent version of your Lambda:
 
-Serverless: https://<id>.execute-api.us-east-1.amazonaws.com/<stage>/healthcheck: "OK"
+```sh
+serverless prune -n 1
 ```

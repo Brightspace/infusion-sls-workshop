@@ -29,7 +29,7 @@ This works because `serverless.yml` defines the function:
 ```yml
 functions:
   hello:
-    handler: hello.handler
+    handler: index.handler
 ```
 
 and `index.js` exports a function called `handler`:

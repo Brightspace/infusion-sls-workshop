@@ -1,4 +1,4 @@
-# Helo World
+# Hello World
 
 ## Getting Started
 
